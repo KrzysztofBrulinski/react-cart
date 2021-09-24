@@ -1,0 +1,28 @@
+{
+  "name": "react_task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --mode=development --hot  --open --port 3030",
+    "build": "webpack --mode=production"
+  },
+  "author": "Empik",
+  "license": "ISC",
+  "dependencies": {
+    "react": "~17.0.1",
+    "react-dom": "~17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.12.3",
+    "@babel/preset-env": "~7.12.1",
+    "@babel/preset-react": "~7.12.5",
+    "babel-loader": "~8.2.1",
+    "css-loader": "~5.0.1",
+    "html-webpack-plugin": "~5.1.0",
+    "style-loader": "~2.0.0",
+    "webpack": "~5.22.0",
+    "webpack-cli": "~4.5.0",
+    "webpack-dev-server": "~3.11.0"
+  }
+}

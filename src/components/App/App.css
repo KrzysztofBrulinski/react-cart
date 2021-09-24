@@ -1,0 +1,10 @@
+.container{
+    width: 1000px;
+    margin: 100px auto 0 auto;
+}
+
+.row {
+    padding: 10px;
+    border-bottom: 1px solid silver;
+    list-style: none;
+}
