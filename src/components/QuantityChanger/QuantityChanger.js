@@ -1,29 +1,28 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { debounce } from "lodash";
 import { fetchFromApi } from "../../api_utils/api.utils";
+import Button from "../Button/Button";
 
+// Set const API url
 const apiUrl = "/api/product/check";
 
-const QuantityChanger = ({ min, max, isBlocked, pid }) => {
-  const [quantity, setQuantity] = useState(1);
+const QuantityChanger = ({ min, max, isBlocked, pid, price, updateCart }) => {
+  const [quantity, setQuantity] = useState(min || 1);
   const [minusDisabled, setMinusDisabled] = useState(false);
   const [plusDisabled, setPlusDisabled] = useState(false);
-  const [apiCheck, setApiCheck] = useState();
+  const [apiStatus, setApiStatus] = useState({});
 
+  // Increment product quantity. Unlock opposite button if it's blocked
   const incrementQuantity = () => {
-    if (quantity < max || !max) {
-      if (minusDisabled) setMinusDisabled(false);
-      setQuantity(quantity + 1);
-    }
+    setQuantity(quantity + 1);
+    if (minusDisabled) setMinusDisabled(false);
   };
-
+  // Decrement product quantity. Unlock opposite button if it's blocked
   const decrementQuantity = () => {
-    if (quantity > min || !min) {
-      if (plusDisabled) setPlusDisabled(false);
-      setQuantity(quantity - 1);
-    }
+    setQuantity(quantity - 1);
+    if (plusDisabled) setPlusDisabled(false);
   };
-
+  // Set object to post API. Fetch to check if quantity is correct
   const checkQuantity = (quantity) => {
     const postObject = {
       method: "POST",
@@ -32,28 +31,29 @@ const QuantityChanger = ({ min, max, isBlocked, pid }) => {
         quantity: quantity,
       }),
     };
-    fetchFromApi(apiUrl, setApiCheck, postObject);
+    fetchFromApi(apiUrl, setApiStatus, postObject);
   };
-
+  // Debounce function to reduce API calls
   const debaunceApiCall = useCallback(
     debounce((quantity) => checkQuantity(quantity), 1000),
     []
   );
 
   useEffect(() => {
-    // call API
+    // Call API to check if quantity is correct
     debaunceApiCall(quantity);
-    // check if min or max limit has been reached
+    // Update products in cart
+    updateCart(pid, quantity, price);
+
+    // Check if min or max limit has been reached -> if yes, disable button
     if (quantity === max) setPlusDisabled(true);
     else if (quantity === min || quantity === 0) setMinusDisabled(true);
   }, [quantity]);
 
   useEffect(() => {
-    // if api quantity error occurs and min exist, set quantity to min value
-    const isQuantityError =
-      apiCheck?.status === 406 && apiCheck?.statusText === "Not Acceptable";
-    if (isQuantityError && min) setQuantity(min);
-  }, [apiCheck]);
+    // If API quantity error occurs and min exist, set quantity to min value
+    if (!apiStatus && min) setQuantity(min);
+  }, [apiStatus]);
 
   return (
     <div className="quantity-changer">
@@ -61,20 +61,23 @@ const QuantityChanger = ({ min, max, isBlocked, pid }) => {
         Obecnie masz {quantity} sztuk produktu
       </span>
       <div className="quantity-changer__buttons">
-        <button
-          disabled={isBlocked || minusDisabled}
-          className="buttons__minus"
-          onClick={decrementQuantity}
-        >
-          -
-        </button>
-        <button
-          disabled={isBlocked || plusDisabled}
-          className="buttons__plus"
-          onClick={incrementQuantity}
-        >
-          +
-        </button>
+        <Button
+          slot="-"
+          cssClass={`buttons__minus ${
+            isBlocked || minusDisabled ? "disabled" : ""
+          }`}
+          isDisabled={isBlocked || minusDisabled}
+          handleClick={decrementQuantity}
+        />
+
+        <Button
+          slot="+"
+          cssClass={`buttons__minus ${
+            isBlocked || plusDisabled ? "disabled" : ""
+          }`}
+          isDisabled={isBlocked || plusDisabled}
+          handleClick={incrementQuantity}
+        />
       </div>
     </div>
   );
