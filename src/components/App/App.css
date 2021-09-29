@@ -1,10 +1,51 @@
-.container{
-    width: 1000px;
-    margin: 100px auto 0 auto;
+body {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.container {
+  width: 1000px;
+  margin: 100px auto 0 auto;
 }
 
 .row {
-    padding: 10px;
-    border-bottom: 1px solid silver;
-    list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid silver;
+  list-style: none;
+}
+
+.quantity-changer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 220px;
+}
+
+.quantity-changer .quantity-changer__status {
+  padding: 10px 0;
+}
+
+.quantity-changer .quantity-changer__buttons button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #dee1e6;
+  border-radius: 3px;
+  color: #000;
+  font-size: 18px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+  margin: 5px;
+}
+
+.quantity-changer .quantity-changer__buttons button:not(.disabled):hover {
+  background-color: #c7c7c7;
+}
+
+.quantity-changer .quantity-changer__buttons button.disabled {
+  opacity: 0.5;
+  cursor: inherit;
 }
