@@ -52,7 +52,12 @@ const QuantityChanger = ({ min, max, isBlocked, pid, price, updateCart }) => {
 
   useEffect(() => {
     // If API quantity error occurs and min exist, set quantity to min value
-    if (!apiStatus && min) setQuantity(min);
+    if (
+      apiStatus?.isError &&
+      apiStatus?.errorType === "INCORRECT_QUANTITY" &&
+      min
+    )
+      setQuantity(min);
   }, [apiStatus]);
 
   return (
